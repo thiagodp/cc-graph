@@ -2,6 +2,7 @@ import { R_OK, W_OK } from 'constants';
 import { access, readFile, writeFile } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
+import resolvePkg from 'resolve-pkg';
 
 export async function copyFile( from: string, to: string, overwrite: boolean = false ): Promise< void > {
     if ( ! overwrite ) {
@@ -20,8 +21,9 @@ export async function copyFile( from: string, to: string, overwrite: boolean = f
 }
 
 export async function copyGraphLibrary( directory: string ): Promise< void > {
+    const pkgPath = resolvePkg( 'cytoscape', { cwd: __dirname } );
     const file = 'cytoscape.min.js';
-    const from = join( __dirname, '../node_modules/cytoscape/dist/', file );
+    const from = join( pkgPath || '../../cytoscape', 'dist/', file );
     const to = join( directory, file );
     await copyFile( from, to );
 }

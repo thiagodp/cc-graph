@@ -46,6 +46,7 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
-    "cytoscape": "^3.18.1"
+    "cytoscape": "^3.18.1",
+    "resolve-pkg": "^2.0.0"
   }
 }
