@@ -1,0 +1,51 @@
+{
+  "name": "cc-graph",
+  "version": "0.1.0",
+  "description": "Graph visualization for Concordia feature files",
+  "homepage": "https://github.com/thiagodp/cc-graph",
+  "author": "Thiago Delgado Pinto",
+  "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thiagodp/cc-graph.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thiagodp/cc-graph/issues"
+  },
+  "keywords": [
+    "graph",
+    "concordia",
+    "concordialang",
+    "feature",
+    "agile"
+  ],
+  "main": "./dist/index.js",
+  "files": [
+    "dist",
+    "web",
+    "LICENSE",
+    "package.*",
+    "README.md"
+  ],
+  "bin": {
+    "cc-graph": "./dist/cli.js"
+  },
+  "scripts": {
+    "test": "echo \"No tests yet\"",
+    "clear": "rimraf dist",
+    "prebuild": "npm run clear",
+    "build": "tsc",
+    "watch": "npm run clear && tsc --watch",
+    "preversion": "npm run build && npm run test",
+    "postversion": "git push && git push --tags"
+  },
+  "devDependencies": {
+    "@types/cytoscape": "^3.14.12",
+    "@types/node": "^14.14.37",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "cytoscape": "^3.18.1"
+  }
+}
