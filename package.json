@@ -1,6 +1,6 @@
 {
   "name": "cc-graph",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Graph visualization for Concordia feature files",
   "homepage": "https://github.com/thiagodp/cc-graph",
   "author": "Thiago Delgado Pinto",
