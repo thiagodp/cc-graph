@@ -17,12 +17,12 @@ const util_1 = require("util");
 const copier_1 = require("./copier");
 const graph_1 = require("./graph");
 const scanner_1 = require("./scanner");
-function main(inputDir, outputDir, warningFn) {
+function main(inputDir, outputDir, options = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         // Scan feature files
         const files = [];
         yield scanner_1.scanFeatureFiles(inputDir, files);
-        const graph = yield graph_1.buildGraph(files, warningFn);
+        const graph = yield graph_1.buildGraph(files, options.warningFn);
         // Check output directory
         const _access = util_1.promisify(fs_1.access);
         try {
@@ -31,15 +31,15 @@ function main(inputDir, outputDir, warningFn) {
         catch (err) {
             // Directory does not exist - create it
             const _mkdir = util_1.promisify(fs_1.mkdir);
-            yield _mkdir(outputDir);
+            yield _mkdir(outputDir, { recursive: true });
         }
         // Save graph to file
         yield saveGraphToJsFile(graph, outputDir, 'data.js');
         // Copy other files
         const fromDir = path_1.join(__dirname, '../web');
-        yield copier_1.copyFile(path_1.join(fromDir, 'index.html'), path_1.join(outputDir, 'index.html'));
-        yield copier_1.copyFile(path_1.join(fromDir, 'style.css'), path_1.join(outputDir, 'style.css'));
-        yield copier_1.copyFile(path_1.join(fromDir, 'index.js'), path_1.join(outputDir, 'index.js'));
+        yield copier_1.copyFile(path_1.join(fromDir, 'index.html'), path_1.join(outputDir, 'index.html'), !options.keepFiles);
+        yield copier_1.copyFile(path_1.join(fromDir, 'style.css'), path_1.join(outputDir, 'style.css'), !options.keepFiles);
+        yield copier_1.copyFile(path_1.join(fromDir, 'index.js'), path_1.join(outputDir, 'index.js'), !options.keepFiles);
         yield copier_1.copyGraphLibrary(outputDir);
     });
 }

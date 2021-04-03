@@ -25,7 +25,7 @@ const warn = (...args) => {
 };
 function cli() {
     return __awaiter(this, void 0, void 0, function* () {
-        const syntax = 'Syntax: cc-graph <features-dir> [output-dir]';
+        const syntax = 'Syntax: cc-graph <features-dir> [output-dir] [--keep]';
         const argc = process.argv.length;
         // Validate arguments
         const preIndex = process.argv.findIndex(v => v.toLowerCase().endsWith('cli.js'));
@@ -34,11 +34,18 @@ function cli() {
             process.exit(1);
         }
         let args = process.argv.slice(preIndex + 1);
-        // Check for debug mode
+        // Check argument --debug
         const debugModeIndex = args.findIndex(v => '--debug' == v);
         if (debugModeIndex >= 0) {
             debugMode = true;
             args = args.filter((_, i) => i !== debugModeIndex); // Remove --debug
+        }
+        // Check argument --keep
+        let keep = false;
+        const keepIndex = args.findIndex(v => '--keep' == v);
+        if (keepIndex >= 0) {
+            keep = true;
+            args = args.filter((_, i) => i !== keepIndex); // Remove --keep
         }
         if (args.length < 1) {
             console.error(syntax);
@@ -50,7 +57,7 @@ function cli() {
         const outputDir = path_1.resolve(processDir, (args.length > 1 ? args[1] : 'cc-graph-output'));
         // console.log( 'IN :', inputDir, "\nOUT:", outputDir );
         try {
-            yield main_1.main(inputDir, outputDir, warn);
+            yield main_1.main(inputDir, outputDir, { warningFn: warn, keepFiles: keep });
         }
         catch (err) {
             if (err.message.startsWith('ENOENT')) {

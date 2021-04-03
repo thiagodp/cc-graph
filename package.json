@@ -48,5 +48,8 @@
   "dependencies": {
     "cytoscape": "^3.18.1",
     "resolve-pkg": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=10"
   }
 }

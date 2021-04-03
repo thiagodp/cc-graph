@@ -7,15 +7,17 @@ import { copyFile, copyGraphLibrary } from './copier';
 import { buildGraph, GraphData, WarningFn } from './graph';
 import { scanFeatureFiles } from './scanner';
 
+export type MainOptions = { warningFn?: WarningFn, keepFiles?: boolean };
+
 export async function main(
     inputDir: string,
     outputDir: string,
-    warningFn?: WarningFn
+    options: MainOptions = {}
 ): Promise< void > {
     // Scan feature files
     const files: string[] = [];
     await scanFeatureFiles( inputDir, files );
-    const graph: GraphData = await buildGraph( files, warningFn );
+    const graph: GraphData = await buildGraph( files, options.warningFn );
     // Check output directory
     const _access = promisify( access );
     try {
@@ -23,15 +25,15 @@ export async function main(
     } catch ( err ) {
         // Directory does not exist - create it
         const _mkdir = promisify( mkdir );
-        await _mkdir( outputDir );
+        await _mkdir( outputDir, { recursive: true } );
     }
     // Save graph to file
     await saveGraphToJsFile( graph, outputDir, 'data.js' );
     // Copy other files
     const fromDir = join( __dirname, '../web' );
-    await copyFile( join( fromDir, 'index.html' ), join( outputDir, 'index.html' ) );
-    await copyFile( join( fromDir, 'style.css' ), join( outputDir, 'style.css' ) );
-    await copyFile( join( fromDir, 'index.js' ), join( outputDir, 'index.js' ) );
+    await copyFile( join( fromDir, 'index.html' ), join( outputDir, 'index.html' ), ! options.keepFiles );
+    await copyFile( join( fromDir, 'style.css' ), join( outputDir, 'style.css' ), ! options.keepFiles );
+    await copyFile( join( fromDir, 'index.js' ), join( outputDir, 'index.js' ), ! options.keepFiles );
     await copyGraphLibrary( outputDir );
 }
 
